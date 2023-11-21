@@ -1,0 +1,3 @@
+-I/opt/devkitpro/libtonc/include
+-I./inc/
+-I./build/
