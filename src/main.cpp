@@ -1,29 +1,33 @@
+#include "cube.hpp"
 #include "palette.hpp"
+#include "renderable.hpp"
+#include "scene.hpp"
 #include "vector.hpp"
 #include <tonc.h>
+
+class Box : public Renderable {
+public:
+  virtual void render(std::shared_ptr<Scene> scene) {
+    scene->draw_line({0, 0}, {2 << FIX_SHIFT, 3 << FIX_SHIFT}, 1);
+  }
+};
 
 int main() {
   // interrupt & mode 4 foo
   irq_init(NULL);
   irq_enable(II_VBLANK);
   REG_DISPCNT = DCNT_MODE4 | DCNT_BG2;
-
-  // initialize our palette
   palette::put_palette((std::uint16_t *)MEM_PAL);
 
-  // begin
-  bmp16_line(1, 3, 1 + SCREEN_WIDTH / 2 - 2, SCREEN_HEIGHT, 0x0101, vid_page,
-             SCREEN_WIDTH);
-  vid_flip();
-  bmp16_line(2, 3, 2 + SCREEN_WIDTH / 2 - 2, SCREEN_HEIGHT, 0x0101, vid_page,
-             SCREEN_WIDTH);
+  auto scene = std::make_shared<Scene>();
+  //  auto cube = std::shared_ptr<Renderable>((Renderable *)new Cube());
+  //  scene->renderables.add(cube);
+  auto box = std::shared_ptr<Renderable>((Renderable *)new Box());
 
-  std::uint32_t frame = 0;
+  scene->renderables.add(box);
+
   while (1) {
-    frame = (frame + 1) % 60;
-    if (frame == 0) {
-      vid_flip();
-    }
+    Scene::render(scene);
 
     VBlankIntrWait();
   }

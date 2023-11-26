@@ -7,7 +7,7 @@ class Scene;
 
 class Renderable {
 public:
-  virtual void render(std::shared_ptr<Scene> scene_context);
+  virtual void render(std::shared_ptr<Scene> scene_context) = 0;
 };
 
 #endif
