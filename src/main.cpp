@@ -5,13 +5,6 @@
 #include "vector.hpp"
 #include <tonc.h>
 
-class Box : public Renderable {
-public:
-  virtual void render(std::shared_ptr<Scene> scene) {
-    scene->draw_line({0, 0}, {2 << FIX_SHIFT, 3 << FIX_SHIFT}, 1);
-  }
-};
-
 int main() {
   // interrupt & mode 4 foo
   irq_init(NULL);
@@ -20,14 +13,19 @@ int main() {
   palette::put_palette((std::uint16_t *)MEM_PAL);
 
   auto scene = std::make_shared<Scene>();
-  //  auto cube = std::shared_ptr<Renderable>((Renderable *)new Cube());
-  //  scene->renderables.add(cube);
-  auto box = std::shared_ptr<Renderable>((Renderable *)new Box());
 
-  scene->renderables.add(box);
+  auto cube = std::shared_ptr<Mesh>((Mesh *)new Cube);
+
+  ModelInstance modelInstance(cube, int2fx(2), {0x0C7F, 0x0000, 0},
+                              {int2fx(0), 0, int2fx(0)});
+
+  auto modelInstancePtr = std::shared_ptr<Renderable>(&modelInstance);
+  scene->renderables.add(modelInstancePtr);
 
   while (1) {
+
     Scene::render(scene);
+    vid_flip();
 
     VBlankIntrWait();
   }

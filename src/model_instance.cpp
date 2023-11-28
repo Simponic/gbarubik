@@ -9,11 +9,12 @@ ModelInstance::ModelInstance(std::shared_ptr<Mesh> mesh, FIXED scale,
 VECTOR rotate(VECTOR v, VECTOR rot) {
   FIXED sin_theta_x, sin_theta_y, sin_theta_z;
   FIXED cos_theta_x, cos_theta_y, cos_theta_z;
+
   VECTOR res = {v.x, v.y, v.z};
 
   if (rot.x != 0) {
-    sin_theta_x = lu_sin(rot.x) >> 4;
-    cos_theta_x = lu_cos(rot.x) >> 4;
+    sin_theta_x = float2fx(0.707); // lu_sin(rot.x) >> 4;
+    cos_theta_x = float2fx(0.707); // lu_cos(rot.x) >> 4;
     res.y = fxmul(res.y, cos_theta_x) - fxmul(res.z, sin_theta_x);
     res.z = fxmul(res.z, cos_theta_x) + fxmul(res.y, sin_theta_x);
   }
@@ -36,14 +37,14 @@ VECTOR rotate(VECTOR v, VECTOR rot) {
 }
 
 void ModelInstance::render(std::shared_ptr<Scene> scene_context) {
-  usu::vector<VECTOR> transformed(m_mesh->vertices.size());
-  usu::vector<POINT> projected(transformed.size());
+  usu::vector<POINT> projected(m_mesh->vertices.size());
 
-  for (std::uint32_t i = 0; i < transformed.size(); i++) {
-    VECTOR rotated = rotate(m_mesh->vertices[i], m_rot);
-    vec_add(&transformed[i], &rotated, &m_pos);
+  for (std::uint32_t i = 0; i < projected.size(); i++) {
+    VECTOR transformed =
+        m_mesh->vertices[i]; // rotate(m_mesh->vertices[i], m_rot);
+    //    vec_add(&transformed, &transformed, &m_pos);
 
-    projected[i] = scene_context->project_2d(m_mesh->vertices[i]);
+    projected[i] = scene_context->project_2d(transformed);
   }
 
   for (const TRIANGLE triangle : m_mesh->triangles) {

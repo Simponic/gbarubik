@@ -10,9 +10,9 @@
 class Scene {
 public:
   usu::vector<std::shared_ptr<Renderable>> renderables;
-  std::tuple<std::uint16_t, std::uint16_t>
+  std::tuple<std::uint32_t, std::uint32_t>
       viewport_dimension; // <width, height>
-  std::tuple<std::uint16_t, std::uint16_t> scene_dimension;
+  std::tuple<std::uint32_t, std::uint32_t> scene_dimension;
   VECTOR directional_light;
   FIXED z_plane;
 
