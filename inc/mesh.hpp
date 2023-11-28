@@ -14,9 +14,9 @@ typedef struct TRIANGLE {
 } TRIANGLE;
 
 class Mesh {
-protected:
-  usu::vector<VECTOR> m_vertices;
-  usu::vector<TRIANGLE> m_triangles;
+public:
+  usu::vector<VECTOR> vertices;
+  usu::vector<TRIANGLE> triangles;
 };
 
 #endif // MESH_HPP
