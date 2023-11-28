@@ -40,9 +40,8 @@ void ModelInstance::render(std::shared_ptr<Scene> scene_context) {
   usu::vector<POINT> projected(m_mesh->vertices.size());
 
   for (std::uint32_t i = 0; i < projected.size(); i++) {
-    VECTOR transformed =
-        m_mesh->vertices[i]; // rotate(m_mesh->vertices[i], m_rot);
-    //    vec_add(&transformed, &transformed, &m_pos);
+    VECTOR transformed = rotate(m_mesh->vertices[i], m_rot);
+    vec_add(&transformed, &transformed, &m_pos);
 
     projected[i] = scene_context->project_2d(transformed);
   }
@@ -57,3 +56,5 @@ void ModelInstance::render(std::shared_ptr<Scene> scene_context) {
     scene_context->draw_line(v2, v0, triangle.color_idx);
   }
 }
+
+void ModelInstance::add_pos(VECTOR d_pos) { vec_add(&m_pos, &m_pos, &d_pos); }

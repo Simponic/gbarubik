@@ -16,16 +16,21 @@ int main() {
 
   auto cube = std::shared_ptr<Mesh>((Mesh *)new Cube);
 
-  ModelInstance modelInstance(cube, int2fx(2), {0x0C7F, 0x0000, 0},
-                              {int2fx(0), 0, int2fx(0)});
+  ModelInstance model_instance(cube, float2fx(0.25), {0, 0x0C00, 0},
+                               {int2fx(3), int2fx(3), int2fx(3)});
 
-  auto modelInstancePtr = std::shared_ptr<Renderable>(&modelInstance);
-  scene->renderables.add(modelInstancePtr);
+  auto model_instance_ptr = std::shared_ptr<Renderable>(&model_instance);
+  scene->renderables.add(model_instance_ptr);
 
+  std::uint8_t frame = 0;
   while (1) {
-
-    Scene::render(scene);
-    vid_flip();
+    if (frame == 0) {
+      model_instance.add_pos({0, 0, float2fx(0.2)});
+      M4_CLEAR();
+      Scene::render(scene);
+      vid_flip();
+    }
+    frame = (frame + 1) % 10;
 
     VBlankIntrWait();
   }

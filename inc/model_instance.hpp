@@ -16,6 +16,7 @@ private:
 public:
   ModelInstance(std::shared_ptr<Mesh> mesh, FIXED scale, VECTOR m_rotation,
                 VECTOR m_pos);
+  void add_pos(VECTOR d_pos);
   virtual void render(std::shared_ptr<Scene> scene_context);
 };
 
